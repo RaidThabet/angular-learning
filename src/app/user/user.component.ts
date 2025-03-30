@@ -1,4 +1,4 @@
-import {Component, computed, input, Input} from '@angular/core';
+import {Component, computed, EventEmitter, input, Input, output, Output} from '@angular/core';
 
 @Component({
   selector: 'app-user',
@@ -7,20 +7,21 @@ import {Component, computed, input, Input} from '@angular/core';
   styleUrl: './user.component.css'
 })
 export class UserComponent {
-  // @Input({required: true}) avatar!: string;
-  // @Input({required: true}) name!: string;
+  @Input({required: true}) id!: string;
+  @Input({required: true}) avatar!: string;
+  @Input({required: true}) name!: string;
 
-  // avatar = input<string>("");
-  // input signals are read-only inside the component class
-  avatar = input.required<string>(); // no initial value is needed
-  name = input.required<string>();
-  imagePath = computed<string>(() => "assets/users/" + this.avatar());
+  // this EventEmitter object will allow us to emit custom values through
+  // that select property to any parent component that's interested
+  @Output() select = new EventEmitter<string>(); // the classic way
+  // select = output<string>(); // the modern way
 
 
-  // get imagePath() {
-  //   return "assets/users/" + this.avatar;
-  // }
+  get imagePath() {
+    return "assets/users/" + this.avatar;
+  }
 
   onSelectUser = () => {
+    this.select.emit(this.id);
   }
 }
