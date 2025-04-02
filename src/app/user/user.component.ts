@@ -1,11 +1,5 @@
 import {Component, computed, EventEmitter, input, Input, output, Output} from '@angular/core';
-import {DUMMY_USERS} from '../../utils/dummy-users';
-
-type User = {
-  id: string;
-  avatar: string;
-  name: string
-}
+import {User} from './user.model';
 
 @Component({
   selector: 'app-user',
@@ -18,6 +12,8 @@ export class UserComponent {
   // @Input({required: true}) avatar!: string;
   // @Input({required: true}) name!: string;
   @Input({required: true}) user!: User;
+
+  @Input({required: true}) isSelected!: boolean;
 
   // this EventEmitter object will allow us to emit custom values through
   // that select property to any parent component that's interested
