@@ -13,7 +13,6 @@ import {InvestmentService} from '../investment.service';
 export class InvestmentResultsComponent {
   investmentService: InvestmentService = inject(InvestmentService);
 
-  get results() {
-    return this.investmentService.resultData;
-  }
+  // results = computed(() => this.investmentService.resultData());
+  results = this.investmentService.resultData.asReadonly(); // get a read-only version of the signal
 }
