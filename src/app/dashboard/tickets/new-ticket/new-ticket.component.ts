@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {ButtonComponent} from '../../../shared/button/button.component';
 import {ControlComponent} from '../../../shared/control/control.component';
 import {FormsModule} from '@angular/forms';
@@ -14,8 +14,10 @@ import {FormsModule} from '@angular/forms';
   styleUrl: './new-ticket.component.css'
 })
 export class NewTicketComponent {
+  @ViewChild("form") form: ElementRef<HTMLFormElement> | undefined; // we can't pass a css selector like '.classname'
 
   onSubmit(title: string, ticketText: string) {
-    console.log("Submitted " + title + " " + ticketText)
+    console.log("Submitted " + title + " " + ticketText);
+    this.form?.nativeElement.reset();
   }
 }
