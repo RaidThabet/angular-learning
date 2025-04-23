@@ -15,11 +15,11 @@ import {FormsModule} from '@angular/forms';
 })
 export class NewTicketComponent {
   // @ViewChild("form") form: ElementRef<HTMLFormElement> | undefined; // we can't pass a css selector like '.classname'
-  private form = viewChild<ElementRef<HTMLFormElement>>("form")
+  private form = viewChild.required<ElementRef<HTMLFormElement>>("form")
   // @ViewChildren(ButtonComponent) buttons: ElementRef<ButtonComponent>[] | undefined; // variation of ViewChild
 
   onSubmit(title: string, ticketText: string) {
     console.log("Submitted " + title + " " + ticketText);
-    this.form()?.nativeElement.reset();
+    this.form().nativeElement.reset();
   }
 }
