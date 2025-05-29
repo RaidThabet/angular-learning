@@ -29,7 +29,7 @@ export class ControlComponent {
   //   console.log("clicked!!")
   // }
   label = input.required<string>();
-  private el = inject(ElementRef); // Angular gives accessto the host element of the component
+  private el = inject(ElementRef); // Angular gives access to the host element of the component
   // @ContentChild("input") private control: ElementRef<HTMLInputElement | HTMLTextAreaElement> | undefined;
   private control = contentChild.required<ElementRef<HTMLInputElement | HTMLTextAreaElement>>("input");
 
