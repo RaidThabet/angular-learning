@@ -1,4 +1,5 @@
 import {
+  AfterContentInit, afterNextRender, afterRender,
   Component, contentChild,
   ContentChild,
   ElementRef,
@@ -22,7 +23,7 @@ import {
     "(click)": "onClick()"
   }
 })
-export class ControlComponent {
+export class ControlComponent implements AfterContentInit{
   // !! Not recommended
   // @HostBinding("class") className = "control"; // add className as an attribute to the host element and bind to the class property
   // @HostListener("click") onClick() {
@@ -32,6 +33,21 @@ export class ControlComponent {
   private el = inject(ElementRef); // Angular gives access to the host element of the component
   // @ContentChild("input") private control: ElementRef<HTMLInputElement | HTMLTextAreaElement> | undefined;
   private control = contentChild.required<ElementRef<HTMLInputElement | HTMLTextAreaElement>>("input");
+
+  constructor() {
+    // runs after any change anywhere in the entire Angular application
+    afterRender(() => {
+      console.log("after render");
+    });
+
+    afterNextRender(() => {
+      console.log("after next render");
+    });
+  }
+
+  ngAfterContentInit() {
+    // same thing as viewChild
+  }
 
   onClick() {
     console.log("clicked!!");
