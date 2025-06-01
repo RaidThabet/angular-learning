@@ -1,4 +1,4 @@
-import {Directive} from '@angular/core';
+import {Directive, input} from '@angular/core';
 
 // The goal is to warn the user that they are going to leave the page when they click on the link
 
@@ -9,6 +9,8 @@ import {Directive} from '@angular/core';
   }
 })
 export class SafeLinkDirective {
+  queryParam = input("myapp");
+
   constructor() {
     console.log("SafeLInkDirective is active");
   }
@@ -17,6 +19,8 @@ export class SafeLinkDirective {
     const wantsToLeave = window.confirm("Do you want to leave the app?");
 
     if (wantsToLeave) {
+      const address = (event.target as HTMLAnchorElement).href; // The URL the user clicked
+      (event.target as HTMLAnchorElement).href = address + `?from=${this.queryParam()}`;
       return;
     }
 
