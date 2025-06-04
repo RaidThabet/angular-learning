@@ -18,11 +18,15 @@ export class AvailablePlacesComponent {
   private destroyRef = inject(DestroyRef);
 
   ngOnInit() {
-    const subscription = this.httpClient.get<{ places: Place[] }>("http://localhost:3000/places").subscribe({
-      next: (resData) => {
-        console.log(resData);
-      }
-    });
+    const subscription = this.httpClient
+      .get<{ places: Place[] }>("http://localhost:3000/places", {
+        observe: "response" // the 'next' function will now take the full response object
+      })
+      .subscribe({
+        next: (response) => {
+          console.log(response.body?.places);
+        }
+      });
 
     this.destroyRef.onDestroy(() => {
       subscription.unsubscribe();
