@@ -5,6 +5,7 @@ import {PlacesComponent} from '../places.component';
 import {PlacesContainerComponent} from '../places-container/places-container.component';
 import {HttpClient} from '@angular/common/http';
 import {catchError, map, throwError} from 'rxjs';
+import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
 
 @Component({
   selector: 'app-available-places',
@@ -48,5 +49,13 @@ export class AvailablePlacesComponent {
     this.destroyRef.onDestroy(() => {
       subscription.unsubscribe();
     })
+  }
+
+  onSelectPlace(selectedPlace: Place) {
+    this.httpClient.put("http://localhost:3000/user-places", {
+      placeId: selectedPlace.id
+    }).subscribe({
+      next: (resData) => console.log(resData)
+    });
   }
 }
