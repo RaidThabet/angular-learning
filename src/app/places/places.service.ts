@@ -29,10 +29,22 @@ export class PlacesService {
     }));
   }
 
-  addPlaceToUserPlaces(placeId: string) {
+  addPlaceToUserPlaces(place: Place) {
+    const previousPlaces = this.userPlaces();
+
+    if (!previousPlaces.some((p) => p.id === place.id)) {
+      this.userPlaces.set([...previousPlaces, place]);
+    }
+
     return this.httpClient.put("http://localhost:3000/user-places", {
-      placeId
+      placeId: place.id
     })
+      .pipe(
+        catchError(err => {
+          this.userPlaces.set(previousPlaces);
+          return throwError(() => new Error("Failed to store selected place."));
+        })
+      )
   }
 
   removeUserPlace(place: Place) {
