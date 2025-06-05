@@ -1,6 +1,6 @@
 import {Component, computed, DestroyRef, effect, inject, OnInit, signal} from '@angular/core';
 import {interval, map} from 'rxjs';
-import {toObservable} from '@angular/core/rxjs-interop';
+import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +10,10 @@ import {toObservable} from '@angular/core/rxjs-interop';
 export class AppComponent implements OnInit {
   clickCount = signal(0);
   clickCount$ = toObservable(this.clickCount);
-  interval = signal(0);
-  doubleInterval = computed(() => this.interval() * 2);
+  interval$ = interval(1000); // Observables don't necessarily have initial values, but Subjects can
+  intervalSignal = toSignal(this.interval$, {initialValue: 0});
+  // interval = signal(0);
+  // doubleInterval = computed(() => this.interval() * 2);
   private destroyRef = inject(DestroyRef);
 
   constructor() {
@@ -22,8 +24,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    setInterval(() => {
-      this.interval.update(prev => prev + 1);}, 1000);
+    // setInterval(() => {
+    //   this.interval.update(prev => prev + 1);}, 1000);
 
     // const subscription =
     //   interval(1000)
