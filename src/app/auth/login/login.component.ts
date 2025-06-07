@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {of} from 'rxjs';
+import {debounceTime, of} from 'rxjs';
 
 function mustContainQuestionMark(control: AbstractControl) {
   if (control.value.includes("?")) {
     return null; // tell angular this control is valid
   }
 
-  return { doesNotContainQuestionMark: true }
+  return {doesNotContainQuestionMark: true}
 }
 
 function emailIsUnique(control: AbstractControl) {
@@ -16,6 +16,14 @@ function emailIsUnique(control: AbstractControl) {
   }
 
   return of({notUnique: true});
+}
+
+let initialEmailValue = "";
+const savedForm = localStorage.getItem("saved-login-form");
+
+if (savedForm) {
+  const loadedForm = JSON.parse(savedForm);
+  initialEmailValue = loadedForm.email;
 }
 
 @Component({
@@ -27,10 +35,12 @@ function emailIsUnique(control: AbstractControl) {
     ReactiveFormsModule
   ]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
+
   form = new FormGroup({
-    email: new FormControl("", {
-      validators: [ Validators.email, Validators.required ],
+    email: new FormControl(initialEmailValue, {
+      validators: [Validators.email, Validators.required],
       asyncValidators: [emailIsUnique]
     }),
     password: new FormControl("", {
@@ -44,6 +54,27 @@ export class LoginComponent {
 
   get passwordIsInvalid() {
     return this.form.controls.password.touched && this.form.controls.password.dirty && this.form.controls.password.invalid
+  }
+
+  ngOnInit() {
+    // const savedForm = localStorage.getItem("saved-login-form");
+    //
+    // if (savedForm) {
+    //   const loadedForm = JSON.parse(savedForm);
+    //   this.form.patchValue({
+    //     email: loadedForm.email,
+    //   })
+    // }
+
+    const subscription = this.form.valueChanges.pipe(debounceTime(500)).subscribe({
+      next: value => {
+        localStorage.setItem("saved-login-form", JSON.stringify({email: value.email}));
+      }
+    });
+
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    })
   }
 
   onSubmit() {
