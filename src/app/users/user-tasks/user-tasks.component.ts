@@ -19,20 +19,20 @@ import {
     RouterLink
   ]
 })
-export class UserTasksComponent implements OnInit {
+export class UserTasksComponent {
   userName = input.required<string>();
   message = input.required<string>();
   private activatedRoute = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
-
-  ngOnInit() {
-    // data holds the merged static and dynamically resolved data
-    const subscription = this.activatedRoute.data.subscribe({
-      next: (data) => console.log(data),
-    });
-
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
-  }
+  // private destroyRef = inject(DestroyRef);
+  //
+  // ngOnInit() {
+  //   // data holds the merged static and dynamically resolved data
+  //   const subscription = this.activatedRoute.data.subscribe({
+  //     next: (data) => console.log(data),
+  //   });
+  //
+  //   this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  // }
 }
 
 // will be re-executed every time the route parameter changes, so we don't have to setup a subscription
